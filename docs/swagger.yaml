@@ -1,0 +1,121 @@
+basePath: /
+definitions:
+  health.CloudinaryTestErrorResponse:
+    properties:
+      error:
+        example: invalid credentials
+        type: string
+      message:
+        example: Cloudinary connection failed
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  health.CloudinaryTestResponse:
+    properties:
+      message:
+        example: Cloudinary connected successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  health.DBTestErrorResponse:
+    properties:
+      error:
+        example: connection timeout
+        type: string
+      message:
+        example: Aiven connection failed
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  health.DBTestResponse:
+    properties:
+      message:
+        example: Aiven connected successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  health.HealthResponse:
+    properties:
+      message:
+        example: Vibecart server is running
+        type: string
+      status:
+        example: ok
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Backend API documentation for Vibecart project.
+  title: Vibecart API
+  version: "1.0"
+paths:
+  /api/v1/health:
+    get:
+      description: Check if API v1 is running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.HealthResponse'
+      summary: API v1 Health Check
+      tags:
+      - API
+  /health:
+    get:
+      description: Check if backend server is running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.HealthResponse'
+      summary: Server Health Check
+      tags:
+      - Health
+  /test/aiven:
+    get:
+      description: Execute SELECT 1 to verify database connection
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.DBTestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/health.DBTestErrorResponse'
+      summary: Test Aiven MySQL Connection
+      tags:
+      - Test
+  /test/cloudinary:
+    get:
+      description: Upload small text file to verify Cloudinary credential
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.CloudinaryTestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/health.CloudinaryTestErrorResponse'
+      summary: Test Cloudinary Connection
+      tags:
+      - Test
+swagger: "2.0"
