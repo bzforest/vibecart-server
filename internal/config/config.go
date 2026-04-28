@@ -3,13 +3,15 @@ package config
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	AppPort string
-	AppEnv  string
+	AppPort            string
+	AppEnv             string
+	CORSAllowedOrigins []string
 
 	DBHost     string
 	DBPort     string
@@ -29,8 +31,12 @@ func LoadConfig() *Config {
 	}
 
 	cfg := &Config{
-		AppPort: getEnv("APP_PORT", "8080"),
+		AppPort: getEnv("PORT", getEnv("APP_PORT", "8080")),
 		AppEnv:  getEnv("APP_ENV", "development"),
+		CORSAllowedOrigins: getEnvList(
+			"CORS_ALLOWED_ORIGINS",
+			[]string{"http://localhost:4200"},
+		),
 
 		DBHost:     getEnv("DB_HOST", ""),
 		DBPort:     getEnv("DB_PORT", "3306"),
@@ -56,4 +62,26 @@ func getEnv(key string, fallback string) string {
 		return fallback
 	}
 	return value
+}
+
+func getEnvList(key string, fallback []string) []string {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+
+	parts := strings.Split(value, ",")
+	items := make([]string, 0, len(parts))
+	for _, part := range parts {
+		item := strings.TrimSpace(part)
+		if item != "" {
+			items = append(items, item)
+		}
+	}
+
+	if len(items) == 0 {
+		return fallback
+	}
+
+	return items
 }

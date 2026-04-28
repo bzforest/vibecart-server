@@ -64,7 +64,7 @@ func TestAivenHandler(db *gorm.DB) gin.HandlerFunc {
 // @Router /test/cloudinary [get]
 func TestCloudinaryHandler(cld *cloudinary.Cloudinary, cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		_ , err := cld.Upload.Upload(
+		_, err := cld.Upload.Upload(
 			context.Background(),
 			strings.NewReader("vibecart cloudinary connection test"),
 			uploader.UploadParams{
